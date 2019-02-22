@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.UserDao">
+
+    <resultMap id="a1"  type="User">
+        <result column="user_id" property="userId"/>
+        <result column="telphone" property="telphone"/>
+        <result column="password" property="password"/>
+        <result column="user_image" property="userImage"/>
+        <result column="nickname" property="nickname"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="autograph" property="autograph"/>
+        <result column="user_province" property="userProvince"/>
+        <result column="user_city" property="userCity"/>
+        <result column="user_status" property="userStatus"/>
+        <association property="guru" javaType="Guru">
+            <result column="guru_id" property="guruId"/>
+            <result column="guru_name" property="guruName"/>
+            <result column="guru_image" property="guruImage"/>
+            <result column="guru_nickname" property="guruNickname"/>
+            <result column="guru_status" property="guruStatus"/>
+        </association>
+    </resultMap>
+
+    <select id="getUsersByPage" resultMap="a1">
+        SELECT
+            t1.*,
+            t2.guru_name,
+            t2.guru_nickname,
+            t2.guru_status
+        FROM
+            cmfz_user t1
+            LEFT JOIN cmfz_guru t2 ON t1.guru_id = t2.guru_id
+        WHERE 1=1
+            <if test="name != null">
+              NAME LIKE #{name}
+            </if>
+
+    </select>
+
+    <select id="getChinaByMap" resultType="java.util.Map">
+        select user_province name, count(1) value
+        from cmfz_user
+        group by user_province
+    </select>
+
+    <select id="getCountByWeek" resultType="java.lang.Integer">
+        select count(1) count from cmfz_user where datediff(now(),create_date) between 0 and 7
+        union select count(1)count from cmfz_user where datediff(now(),create_date) between 8 and 14
+        union select count(1) count from cmfz_user where datediff(now(),create_date) between 15 and 21
+    </select>
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.AudioDao">
+
+    <resultMap id="a1"  type="Audio">
+        <result column="audio_id" property="audioId"/>
+        <result column="audio_name" property="audioName"/>
+        <result column="audio_url" property="audioUrl"/>
+        <result column="audio_size" property="audioSize"/>
+        <result column="audio_Order" property="audioOrder"/>
+        <association property="album" javaType="Album">
+            <result column="album_Id" property="albumId"/>
+            <result column="album_name" property="albumName"/>
+            <result column="album_author" property="albumAuthor"/>
+            <result column="album_Episodes" property="albumEpisodes"/>
+        </association>
+    </resultMap>
+
+    <select id="getAudiosByPage" resultMap="a1">
+
+        SELECT
+        t1.*,
+        t2.album_name,
+        t2.album_author,
+        t2.album_Episodes
+        FROM
+            cmfz_audio t1
+            LEFT JOIN cmfz_album t2 ON t1.album_id = t2.album_id
+        WHERE 1=1
+        <if test="name != null" >
+          and audio_name like #{name}
+        </if>
+        ORDER BY
+            album_id,
+            audio_order
+    </select>
+</mapper>

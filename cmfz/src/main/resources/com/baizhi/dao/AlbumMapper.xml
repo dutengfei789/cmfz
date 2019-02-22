@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.AlbumDao">
+
+    <resultMap id="a1"  type="Album">
+        <result column="album_Id" property="albumId"/>
+        <result column="album_name" property="albumName"/>
+        <result column="album_author" property="albumAuthor"/>
+        <result column="album_Teller" property="albumTeller"/>
+        <result column="album_Date" property="albumDate"/>
+        <result column="album_Content" property="albumContent"/>
+        <result column="album_Image" property="albumImage"/>
+        <result column="album_Episodes" property="albumEpisodes"/>
+        <result column="album_Star" property="albumStar"/>
+        <collection property="children" ofType="Audio">
+            <result column="audio_id" property="audioId"/>
+            <result column="audio_name" property="audioName"/>
+            <result column="audio_url" property="audioUrl"/>
+            <result column="audio_size" property="audioSize"/>
+            <result column="audio_Order" property="audioOrder"/>
+        </collection>
+    </resultMap>
+
+    <select id="getTreeAlbums" resultMap="a1">
+        SELECT
+            t1.*,
+            t2.audio_id,
+            t2.audio_name,
+            t2.audio_size,
+            t2.audio_order,
+            t2.audio_url
+        FROM
+            cmfz_album t1
+            LEFT JOIN cmfz_audio t2 ON t1.album_id = t2.album_id
+        WHERE 1=1
+        ORDER BY album_id,audio_order
+    </select>
+</mapper>

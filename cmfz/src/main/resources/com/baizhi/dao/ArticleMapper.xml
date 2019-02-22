@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.ArticleDao">
+
+    <resultMap id="a1" type="Article">
+        <result column="article_id" property="articleId"/>
+        <result column="article_Name" property="articleName"/>
+        <result column="article_Image" property="articleImage"/>
+        <result column="article_content" property="articleContent"/>
+        <result column="article_Date" property="articleDate"/>
+        <association property="guru" javaType="Guru">
+            <result column="guru_id" property="guruId"/>
+            <result column="guru_name" property="guruName"/>
+            <result column="guru_nickname" property="guruNickname"/>
+            <result column="guru_status" property="guruStatus"/>
+        </association>
+    </resultMap>
+    <select id="getArticleByPage" resultMap="a1">
+        SELECT
+            t1.*,
+            t2.guru_name,
+            t2.guru_nickname,
+            t2.guru_status
+        FROM
+            cmfz_article t1
+            LEFT JOIN cmfz_guru t2 ON t1.guru_id = t2.guru_id
+        WHERE 1=1
+        <if test="name != null">
+            and article_name like #{name}
+        </if>
+
+    </select>
+</mapper>

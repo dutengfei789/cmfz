@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.LessonDao">
+
+    <resultMap id="a1" type="Lesson">
+        <result column="lesson_Id" property="lessonId"/>
+        <result column="lesson_Name" property="lessonName"/>
+        <result column="lesson_Status" property="lessonStatus"/>
+        <association property="user" javaType="User">
+            <result column="user_id" property="userId"/>
+            <result column="name" property="name"/>
+            <result column="user_Status" property="userStatus"/>
+        </association>
+    </resultMap>
+    <select id="getLessonsByPage" resultMap="a1">
+        SELECT
+            t1.*,
+            t2.NAME,
+            t2.user_status
+        FROM
+            cmfz_lesson t1
+            LEFT JOIN cmfz_user t2 ON t1.user_id = t2.user_id
+        where 1=1
+        <if test="name!=null">
+            and lesson_name like #{name}
+        </if>
+    </select>
+</mapper>
